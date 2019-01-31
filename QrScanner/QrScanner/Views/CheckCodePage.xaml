@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QrScanner.Views.CheckCodePage"
+             xmlns:vm="clr-namespace:QrScanner.ViewModels"
+             xmlns:model="clr-namespace:QrScanner.Model;assembly=QrScanner"
+             Title="{Binding Title}">
+    <ContentPage.BindingContext>
+        <vm:CheckCodeViewModel/>
+    </ContentPage.BindingContext>
+    <StackLayout Orientation="Vertical">
+        <Picker ItemsSource="{Binding Events}" Title="Выберите событие" SelectedItem="{Binding SelectedEvent}">
+            <Picker.Behaviors>
+                <model:EventToCommandBehavior EventName="SelectedIndexChanged" Command="{Binding EventItemSelectedCommand}"/>
+            </Picker.Behaviors>
+        </Picker>
+
+        <StackLayout Orientation="Vertical" IsVisible="{Binding IsSearchCodeAvailable}">
+            <Entry Text="{Binding CodeString}" Placeholder="Введите код:">
+                <Entry.Behaviors>
+                    <model:EventToCommandBehavior EventName="TextChanged" Command="{Binding EventItemSelectedCommand}"/>
+                </Entry.Behaviors>
+            </Entry>
+            <Button Command="{Binding CheckCodeCommand}" Text="Поиск билета"/>
+            <Label Text="{Binding CheckingResult}"/>
+
+
+            <ListView ItemsSource="{Binding ResultTickets}" HasUnevenRows="True" IsVisible="{Binding IsViewInfoTicket}" SelectedItem="{Binding SelectedTicket}">
+                <ListView.Behaviors>
+                    <model:EventToCommandBehavior EventName="ItemTapped" Command="{Binding TicketSelectedCommand}"/>
+                </ListView.Behaviors>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame BorderColor="Black" Margin="5" CornerRadius="2" >
+                                <StackLayout Orientation="Vertical">
+                                    <Label Text="{Binding Name, StringFormat='Имя: {0}'}"/>
+                                    <Label Text="{Binding Surname, StringFormat='Фамилия: {0}'}"/>
+                                    <Label Text="{Binding Phone, StringFormat='Телефон: {0}'}"/>
+                                    <Label Text="{Binding Acceptor, StringFormat='Принял: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                                    <Label Text="{Binding EnterTime, StringFormat='Время: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

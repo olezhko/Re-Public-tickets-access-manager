@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:QrScanner.ViewModels;assembly=QrScanner"
+             x:Class="QrScanner.Views.ScanCodePage"
+             Title="{Binding Title}">
+    <ContentPage.BindingContext>
+        <viewModels:ScanCodeViewModel/>
+    </ContentPage.BindingContext>
+    <ContentPage.Content>
+        <StackLayout Spacing="2" Margin="5">
+            <Button Text="Сканировать" Command="{Binding ScanCodeCommand}"/>
+            <!--<Label Text="{Binding ScanResult, StringFormat='ScanResult: {0}'}"/>-->
+
+            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsValidTicket}">
+                <Button Text="Принять Билет" Command="{Binding AcceptTicketCommand}" HorizontalOptions="Start"/>
+                <Label Text="{Binding AcceptResult, StringFormat='Результат: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                <Label Text="{Binding ScannedTicket.Acceptor}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                <Label Text="{Binding ScannedTicket.EnterTime}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+            </StackLayout>
+            <StackLayout Orientation="Vertical" IsVisible="{Binding IsValidTicket}">
+                <Label Text="{Binding ScannedTicket.Name, StringFormat='Имя: {0}'}"/>
+                <Label Text="{Binding ScannedTicket.Surname, StringFormat='Фамилия: {0}'}"/>
+                <Label Text="{Binding ScannedTicket.Phone, StringFormat='Телефон: {0}'}"/>
+                <Label Text="{Binding ScannedTicket.EventName, StringFormat='Событие: {0}'}"/>
+                <Label Text="{Binding ScannedTicket.Dance, StringFormat='Танцпол: {0}'}"/>
+            </StackLayout>
+            <ListView ItemsSource="{Binding ScannedTicket.Tables}" HasUnevenRows="True" IsVisible="{Binding IsValidTicket}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame BorderColor="Black" Margin="0" CornerRadius="2" Padding="5">
+                                <StackLayout Orientation="Vertical" Padding="5">
+                                    <Label Text="{Binding table, StringFormat='Стол: {0}'}" Margin="0"/>
+                                    <Label Text="{Binding place, StringFormat='Место: {0}'}" Margin="0"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
