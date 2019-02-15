@@ -10,14 +10,20 @@
     <ContentPage.Content>
         <StackLayout Spacing="2" Margin="5">
             <Button Text="Сканировать" Command="{Binding ScanCodeCommand}"/>
-            <!--<Label Text="{Binding ScanResult, StringFormat='ScanResult: {0}'}"/>-->
+            <Label Text="{Binding ScanResult, StringFormat=' {0}'}"/>
 
-            <StackLayout Orientation="Horizontal" IsVisible="{Binding IsValidTicket}">
-                <Button Text="Принять Билет" Command="{Binding AcceptTicketCommand}" HorizontalOptions="Start"/>
-                <Label Text="{Binding AcceptResult, StringFormat='Результат: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-                <Label Text="{Binding ScannedTicket.Acceptor}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-                <Label Text="{Binding ScannedTicket.EnterTime}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-            </StackLayout>
+            <Frame BorderColor="Gray" BackgroundColor="Transparent">
+                <StackLayout Orientation="Vertical" IsVisible="{Binding IsValidTicket}">
+                    <Button Text="Принять Билет" Command="{Binding AcceptTicketCommand}" HorizontalOptions="Start" IsVisible="{Binding IsVisibleAcceptButton}"/>
+                    <Label Text="{Binding AcceptResult, StringFormat='Результат: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                    <Label Text="{Binding ScannedTicket.Acceptor, StringFormat='Принял: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                    <Label Text="{Binding ScannedTicket.EnterTime, StringFormat='Время: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                </StackLayout>
+            </Frame>
+
+
+
+
             <StackLayout Orientation="Vertical" IsVisible="{Binding IsValidTicket}">
                 <Label Text="{Binding ScannedTicket.Name, StringFormat='Имя: {0}'}"/>
                 <Label Text="{Binding ScannedTicket.Surname, StringFormat='Фамилия: {0}'}"/>

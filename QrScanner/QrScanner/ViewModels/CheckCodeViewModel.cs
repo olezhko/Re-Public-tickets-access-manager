@@ -67,7 +67,7 @@ namespace QrScanner.ViewModels
             {
                 ClearResult();
                 ResultTickets = await Requests.GetInstance().CheckCode(SelectedEvent.Id.ToString(), codeString);
-                if (ResultTickets != null )
+                if (ResultTickets != null && ResultTickets.Count != 0)
                 {
                     CheckingResult = "Билет найден";
                     OnPropertyChanged(nameof(CheckingResult));

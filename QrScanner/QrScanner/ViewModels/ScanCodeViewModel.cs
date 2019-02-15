@@ -26,13 +26,22 @@ namespace QrScanner.ViewModels
 
         public Ticket ScannedTicket { get; set; }
         public bool IsValidTicket { get; set; }
-        //bac11b40-b7d9-42cd-9175-c11c38a9f4e7
+        public string ScanCodeString;
         private async void ScanCode()
         {
+            IsVisibleAcceptButton = true;
+            OnPropertyChanged(nameof(IsVisibleAcceptButton));
+            AcceptResult = "";
+            OnPropertyChanged(nameof(AcceptResult));
             IsValidTicket = false;
             OnPropertyChanged(nameof(IsValidTicket));
             ScanResult = "";
             OnPropertyChanged(nameof(ScanResult));
+
+            ScannedTicket = null;
+            OnPropertyChanged(nameof(ScannedTicket));
+
+
             try
             {
                 var scanPage = new ZXingScannerPage();
@@ -58,18 +67,30 @@ namespace QrScanner.ViewModels
             }
         }
 
+
         private async Task<Ticket> GetTicketInfoByCode(string text)
         {
             try
             {
                 if (text != null)
                 {
-                    ScanResult = text;
-                    OnPropertyChanged(nameof(ScanResult));
-                    ScannedTicket = await Requests.GetInstance().GetTicketInfo(ScanResult); // check code
-                    IsValidTicket = true;
-                    OnPropertyChanged(nameof(IsValidTicket));
-                    OnPropertyChanged(nameof(ScannedTicket));
+                    ScanCodeString = text;
+                    ScannedTicket = await Requests.GetInstance().GetTicketInfo(text); // check code
+                    if (ScannedTicket == null)
+                    {
+                        ScanResult = $"Билет не найден!";
+                        OnPropertyChanged(nameof(ScanResult));
+                    }
+                    else
+                    {
+                        IsValidTicket = true;
+                        OnPropertyChanged(nameof(IsValidTicket));
+                        OnPropertyChanged(nameof(ScannedTicket));
+                        ScanResult = ScannedTicket.Acceptor == null ? "Билет найден! Билет не активирован!" : $"Билет найден! Билет активирован! Принял: {ScannedTicket.Acceptor}";
+                        OnPropertyChanged(nameof(ScanResult));
+
+                    }
+
                     return ScannedTicket;
                 }
                 else
@@ -83,44 +104,26 @@ namespace QrScanner.ViewModels
             {
                 ScanResult = "Ошибка функции GetTicketInfoByCode " + e;
                 OnPropertyChanged(nameof(ScanResult));
-                return new Ticket();
+                return null;
             }
         }
 
-        //private async void ScanCode()
-        //{
-        //    ScannedTicket = new Ticket();
-        //    OnPropertyChanged(nameof(ScannedTicket));
-        //    IsValidTicket = false;
-        //    OnPropertyChanged(nameof(IsValidTicket));
-        //    try
-        //    {
-        //        var result = "bac11b40-b7d9-42cd-9175-c11c38a9f4e7";                 // get code
-        //        if (result != null)
-        //        {
-        //            ScanResult = result;
-        //            OnPropertyChanged(nameof(ScanResult));
-        //            ScannedTicket = await Requests.GetInstance().GetTicketInfo(ScanResult); // check code
-        //            IsValidTicket = true;
-        //            OnPropertyChanged(nameof(IsValidTicket));
-        //            OnPropertyChanged(nameof(ScannedTicket));
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //}
-
+        public bool IsVisibleAcceptButton { get; set; }
         public string AcceptResult { get; set; }
         private async void AcceptTicket()
         {
             try
             {
-                var res = await Requests.GetInstance().AcceptTicket(ScanResult);
+                var res = await Requests.GetInstance().AcceptTicket(ScanCodeString);
                 var mess = JsonConvert.DeserializeObject<Message>(res);
 
                 AcceptResult = mess.MessageText;
                 OnPropertyChanged(nameof(AcceptResult));
+
+                IsVisibleAcceptButton = false;
+                OnPropertyChanged(nameof(IsVisibleAcceptButton));
+
+                await GetTicketInfoByCode(ScanCodeString);
             }
             catch (Exception e)
             {

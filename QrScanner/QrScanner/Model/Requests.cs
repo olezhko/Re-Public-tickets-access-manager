@@ -104,7 +104,7 @@ namespace QrScanner
             else
             {
                 var errorxml = await response.Content.ReadAsStringAsync();
-                return new List<TicketCheck>();
+                return null;
             }
         }
     }
