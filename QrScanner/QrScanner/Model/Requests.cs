@@ -24,7 +24,7 @@ namespace QrScanner
 
         public Requests()
         {
-            var authData = string.Format("{0}:{1}", Settings.Name, Settings.Password);
+            var authData = $"{Settings.Name}:{Settings.Password}";
             var authHeaderValue = Convert.ToBase64String(ASCIIEncoding.ASCII.GetBytes(authData));
 
             client = new HttpClient();
@@ -33,7 +33,15 @@ namespace QrScanner
 
         HttpClient client;
 
-        private static string domain = @"https://republic-club.by/api";
+
+        #if DEBUG
+                private static string domain = @"http://192.168.100.7:28010/api";
+                    //private static string domain = @"http://qa.republic-club.by/api";
+        #else
+                private static string domain = @"https://republic-club.by/api";
+        #endif
+
+
         private string _getEventsUrl = domain + @"/admin/events?sort=startEvent&order=desc&page=0&size=100&filter=";
         private string _checkLoginPassUrl = domain + @"/loginprocessing?username={0}&password={1}";
         private string _getTicketInfoUrl = domain + @"/public/orders/{0}";

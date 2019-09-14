@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace QrScanner.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class TicketAccetptorPage : ContentPage
+	public partial class TicketAcceptorPage : ContentPage
 	{
-		public TicketAccetptorPage ()
+		public TicketAcceptorPage ()
 		{
 			InitializeComponent ();
 		}

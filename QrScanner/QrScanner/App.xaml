@@ -3,7 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QrScanner.App">
     <Application.Resources>
-        <ResourceDictionary>
+        <ResourceDictionary >
+            <Style TargetType="Label" ApplyToDerivedTypes="True">
+                <Setter Property="TextColor" Value="Black"/>
+            </Style>
             <!--Global Styles-->
             <!--<Color x:Key="NavigationPrimary">#2196F3</Color>
             <Style TargetType="NavigationPage">

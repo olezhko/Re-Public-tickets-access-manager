@@ -33,8 +33,14 @@ namespace QrScanner.ViewModels
                 var result = await Requests.GetInstance().GetEvents();
                 foreach (var item in result.Items)
                 {
-                    Events.Add(item);
+                    var datetime = DateTime.Parse(item.StartEvent);
+                    if (DateTime.Now < datetime)
+                    {
+                        Events.Add(item);
+                    }
                 }
+
+                Events = new ObservableCollection<ClubEvent>(Events.OrderBy(item => DateTime.Parse(item.StartEvent)));
                 OnPropertyChanged(nameof(Events));
             }
             catch (Exception e)
@@ -69,12 +75,12 @@ namespace QrScanner.ViewModels
                 ResultTickets = await Requests.GetInstance().CheckCode(SelectedEvent.Id.ToString(), codeString);
                 if (ResultTickets != null && ResultTickets.Count != 0)
                 {
-                    CheckingResult = "Билет найден";
-                    OnPropertyChanged(nameof(CheckingResult));
-
                     IsViewInfoTicket = true;
                     OnPropertyChanged(nameof(IsViewInfoTicket));
                     OnPropertyChanged(nameof(ResultTickets));
+
+                    CheckingResult = "Билет найден. Нажмите на него";
+                    OnPropertyChanged(nameof(CheckingResult));
                 }
                 else
                 {
@@ -101,10 +107,24 @@ namespace QrScanner.ViewModels
         private async void TicketSelected()
         {
             // здесь делать проверку, если билет уже был принят
-
             TicketAcceptorViewModel viewModel = new TicketAcceptorViewModel();
-            viewModel.Ticket = SelectedTicket;
-            TicketAccetptorPage page = new TicketAccetptorPage()
+
+            viewModel.Ticket = new TicketViewModel()
+            {
+                Uuid = SelectedTicket.Uuid,
+                Acceptor = SelectedTicket.Acceptor,
+                Dance = SelectedTicket.Dance,
+                EnterTime = SelectedTicket.EnterTime,
+                Name = SelectedTicket.Name,
+                Phone = SelectedTicket.Phone,
+                Surname = SelectedTicket.Surname,
+                Tables = SelectedTicket.Tables,
+                Title = SelectedEvent.Name,
+                PayStatus = SelectedTicket.PayStatus
+            };
+
+
+            TicketAcceptorPage page = new TicketAcceptorPage()
             {
                 BindingContext = viewModel,
             };

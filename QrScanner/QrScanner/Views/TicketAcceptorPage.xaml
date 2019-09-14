@@ -2,29 +2,31 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:QrScanner.ViewModels;assembly=QrScanner"
-             x:Class="QrScanner.Views.TicketAccetptorPage">
+             x:Class="QrScanner.Views.TicketAcceptorPage">
     <ContentPage.BindingContext>
         <viewModels:TicketAcceptorViewModel />
     </ContentPage.BindingContext>
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Margin="5">
             <StackLayout Orientation="Vertical">
                 <Label Text="{Binding Ticket.Name, StringFormat='Имя: {0}'}"/>
                 <Label Text="{Binding Ticket.Surname, StringFormat='Фамилия: {0}'}"/>
                 <Label Text="{Binding Ticket.Phone, StringFormat='Телефон: {0}'}"/>
+                <Label Text="{Binding Ticket.Dance, StringFormat='Танцпол: {0}'}"/>
+                <Label Text="{Binding Ticket.PayStatus, StringFormat='Оплата: {0}'}"/>
             </StackLayout>
             <StackLayout Orientation="Vertical">
                 <Button Text="Принять Билет" Command="{Binding AcceptTicketCommand}" HorizontalOptions="Start"/>
                 <Label Text="{Binding AcceptResult, StringFormat='Результат: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-                <Label Text="{Binding Ticket.Acceptor}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-                <Label Text="{Binding Ticket.EnterTime}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                <Label Text="{Binding Ticket.Acceptor, StringFormat='Принял: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                <Label Text="{Binding Ticket.EnterTime, StringFormat='Время входа: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
             </StackLayout>
             <ListView ItemsSource="{Binding Ticket.Tables}" HasUnevenRows="True" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <Frame BorderColor="Black" Margin="0" CornerRadius="2" Padding="5">
-                                <StackLayout Orientation="Vertical" Padding="5">
+                            <Frame BorderColor="Black" CornerRadius="2" Padding="5"  Margin="5">
+                                <StackLayout Orientation="Vertical">
                                     <Label Text="{Binding table, StringFormat='Стол: {0}'}" Margin="0"/>
                                     <Label Text="{Binding place, StringFormat='Место: {0}'}" Margin="0"/>
                                 </StackLayout>

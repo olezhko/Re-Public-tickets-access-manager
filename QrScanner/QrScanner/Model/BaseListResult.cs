@@ -35,7 +35,8 @@ namespace QrScanner.Model
 
         public override string ToString()
         {
-            return $"{Name}  {StartEvent}";
+            var datetime = DateTime.Parse(StartEvent).ToString("dddd, dd MMMM yyyy HH:mm:ss");
+            return $"{Name}  {datetime}";
         }
     }
 
@@ -46,6 +47,7 @@ namespace QrScanner.Model
         [JsonProperty("place")] public int place { get; set; }
         [JsonProperty("table")] public int table { get; set; }
     }
+
 
     public class Ticket
     {
@@ -59,17 +61,7 @@ namespace QrScanner.Model
         [JsonProperty("tables")] public List<TicketPlace> Tables { get; set; }
         [JsonProperty("enterTime")] public string EnterTime { get; set; }
         [JsonProperty("acceptor")] public string Acceptor { get; set; }
-
-
-        //[JsonProperty("email")] public string Email { get; set; }
-        //[JsonProperty("event")] public long? EventId { get; set; }
-        //[JsonProperty("people")] public int? People { get; set; }
-        //[JsonProperty("arrivalTime")] public string ArrivalTime { get; set; }
-        //[JsonProperty("description")] public string Description { get; set; }
-        //[JsonProperty("tableNumber")] public int TableNumber { get; set; }
-        //[JsonProperty("payStatus")] public string PayStatus { get; set; }
-        //[JsonProperty("food")] public int Food { get; set; }
-        //[JsonProperty("foodPrice")] public double? FoodPrice { get; set; }
+        [JsonProperty("payStatus")] public string PayStatus { get; set; }
     }
 
     public class TicketCheck
@@ -80,6 +72,7 @@ namespace QrScanner.Model
         [JsonProperty("phone")] public string Phone { get; set; }
         [JsonProperty("enterTime")] public string EnterTime { get; set; }
         [JsonProperty("acceptor")] public string Acceptor { get; set; }
+        [JsonProperty("payStatus")] public string PayStatus { get; set; }
         [JsonProperty("danceFloor")] public int Dance { get; set; }
         [JsonProperty("tables")] public List<TicketPlace> Tables { get; set; }
     }

@@ -12,17 +12,14 @@
             <Button Text="Сканировать" Command="{Binding ScanCodeCommand}"/>
             <Label Text="{Binding ScanResult, StringFormat=' {0}'}"/>
 
-            <Frame BorderColor="Gray" BackgroundColor="Transparent">
-                <StackLayout Orientation="Vertical" IsVisible="{Binding IsValidTicket}">
+            <!--<Frame BorderColor="Gray" BackgroundColor="Transparent" IsVisible="{Binding IsValidTicket}">
+                <StackLayout Orientation="Vertical">
                     <Button Text="Принять Билет" Command="{Binding AcceptTicketCommand}" HorizontalOptions="Start" IsVisible="{Binding IsVisibleAcceptButton}"/>
                     <Label Text="{Binding AcceptResult, StringFormat='Результат: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
                     <Label Text="{Binding ScannedTicket.Acceptor, StringFormat='Принял: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
                     <Label Text="{Binding ScannedTicket.EnterTime, StringFormat='Время: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
                 </StackLayout>
             </Frame>
-
-
-
 
             <StackLayout Orientation="Vertical" IsVisible="{Binding IsValidTicket}">
                 <Label Text="{Binding ScannedTicket.Name, StringFormat='Имя: {0}'}"/>
@@ -31,6 +28,7 @@
                 <Label Text="{Binding ScannedTicket.EventName, StringFormat='Событие: {0}'}"/>
                 <Label Text="{Binding ScannedTicket.Dance, StringFormat='Танцпол: {0}'}"/>
             </StackLayout>
+
             <ListView ItemsSource="{Binding ScannedTicket.Tables}" HasUnevenRows="True" IsVisible="{Binding IsValidTicket}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
@@ -44,7 +42,7 @@
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
-            </ListView>
+            </ListView>-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

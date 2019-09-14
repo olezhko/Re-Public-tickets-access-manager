@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="6" android:versionName="0.0.5" package="by.ladyka.trackme" android:installLocation="preferExternal">
-	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="27" />
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="0.0.6" package="by.ladyka.trackme" android:installLocation="preferExternal" android:versionCode="7">
+	<uses-sdk android:minSdkVersion="16" android:targetSdkVersion="28" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
-	<application android:label="Re:Public tickets access manager" android:icon="@drawable/icon"></application>
+	<application android:label="Re:Public tickets access manager" android:icon="@drawable/icon"  android:usesCleartextTraffic="true">
+
+  </application>
 </manifest>

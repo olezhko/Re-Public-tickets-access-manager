@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
+﻿using QrScanner.Model;
+using QrScanner.Views;
+using System;
 using System.Threading.Tasks;
-using System.Windows.Input;
-using Newtonsoft.Json;
-using QrScanner.Model;
 using Xamarin.Forms;
 using ZXing.Net.Mobile.Forms;
-
 
 namespace QrScanner.ViewModels
 {
@@ -17,56 +13,57 @@ namespace QrScanner.ViewModels
         public Command ScanCodeCommand { get; set; }
         public string ScanResult { get; set; }
         public INavigation Navigation { get; set; }
+        public Ticket ScannedTicket { get; set; }
+
         public ScanCodeViewModel()
         {
             Title = "Сканировать QR";
             ScanCodeCommand = new Command(ScanCode);
-            AcceptTicketCommand = new Command(AcceptTicket);
         }
 
-        public Ticket ScannedTicket { get; set; }
-        public bool IsValidTicket { get; set; }
-        public string ScanCodeString;
-        private async void ScanCode()
+        private void ClearResult()
         {
-            IsVisibleAcceptButton = true;
-            OnPropertyChanged(nameof(IsVisibleAcceptButton));
-            AcceptResult = "";
-            OnPropertyChanged(nameof(AcceptResult));
-            IsValidTicket = false;
-            OnPropertyChanged(nameof(IsValidTicket));
             ScanResult = "";
             OnPropertyChanged(nameof(ScanResult));
-
             ScannedTicket = null;
             OnPropertyChanged(nameof(ScannedTicket));
-
-
-            try
-            {
-                var scanPage = new ZXingScannerPage();
-                // Navigate to our scanner page
-                await Navigation.PushAsync(scanPage);
-                scanPage.OnScanResult += (result) =>
-                {
-                    // Stop scanning
-                    scanPage.IsScanning = false;
-
-                    // Pop the page and show the result
-                    Device.BeginInvokeOnMainThread(async () =>
-                    {
-                        await GetTicketInfoByCode(result.Text);
-                        await Navigation.PopAsync();
-                    });
-                };
-            }
-            catch (Exception ex)
-            {
-                ScanResult = "Ошибка функции ScanCode " + ex;
-                OnPropertyChanged(nameof(ScanResult));
-            }
         }
 
+        private bool isScanCamera = true;
+        private async void ScanCode()
+        {
+            ClearResult();
+            if (isScanCamera)
+            {
+                try
+                {
+                    var scanPage = new ZXingScannerPage();
+                    // Navigate to our scanner page
+                    await Navigation.PushAsync(scanPage);
+                    scanPage.OnScanResult += (result) =>
+                    {
+                        // Stop scanning
+                        scanPage.IsScanning = false;
+
+                        // Pop the page and show the result
+                        Device.BeginInvokeOnMainThread(async () =>
+                        {
+                            await GetTicketInfoByCode(result.Text);
+                            await Navigation.PopAsync();
+                        });
+                    };
+                }
+                catch (Exception ex)
+                {
+                    ScanResult = "Ошибка функции ScanCode " + ex;
+                    OnPropertyChanged(nameof(ScanResult));
+                }
+            }
+            else
+            {
+                await GetTicketInfoByCode("e2279741-22dd-4353-8fa5-b82f5fafe98e");
+            }
+        }
 
         private async Task<Ticket> GetTicketInfoByCode(string text)
         {
@@ -74,7 +71,6 @@ namespace QrScanner.ViewModels
             {
                 if (text != null)
                 {
-                    ScanCodeString = text;
                     ScannedTicket = await Requests.GetInstance().GetTicketInfo(text); // check code
                     if (ScannedTicket == null)
                     {
@@ -83,19 +79,25 @@ namespace QrScanner.ViewModels
                     }
                     else
                     {
-                        IsValidTicket = true;
-                        OnPropertyChanged(nameof(IsValidTicket));
-                        OnPropertyChanged(nameof(ScannedTicket));
-                        ScanResult = ScannedTicket.Acceptor == null ? "Билет найден! Билет не активирован!" : $"Билет найден! Билет активирован! Принял: {ScannedTicket.Acceptor}";
-                        OnPropertyChanged(nameof(ScanResult));
-
+                        TicketSelected(new TicketViewModel()
+                        {
+                            Acceptor = ScannedTicket.Acceptor,
+                            Dance = ScannedTicket.Dance,
+                            EnterTime = ScannedTicket.EnterTime,
+                            Name = ScannedTicket.Name,
+                            Phone = ScannedTicket.Phone,
+                            Surname = ScannedTicket.Surname,
+                            Tables = ScannedTicket.Tables,
+                            Title = ScannedTicket.EventName,
+                            PayStatus = ScannedTicket.PayStatus
+                        });
                     }
 
                     return ScannedTicket;
                 }
                 else
                 {
-                    ScanResult = "Error";
+                    ScanResult = "Билет не найден!";
                     OnPropertyChanged(nameof(ScanResult));
                     return new Ticket();
                 }
@@ -108,33 +110,16 @@ namespace QrScanner.ViewModels
             }
         }
 
-        public bool IsVisibleAcceptButton { get; set; }
-        public string AcceptResult { get; set; }
-        private async void AcceptTicket()
+        private async void TicketSelected(TicketViewModel selectedTicket)
         {
-            try
+            // здесь делать проверку, если билет уже был принят
+            TicketAcceptorViewModel viewModel = new TicketAcceptorViewModel();
+            viewModel.Ticket = selectedTicket;
+            TicketAcceptorPage page = new TicketAcceptorPage()
             {
-                var res = await Requests.GetInstance().AcceptTicket(ScanCodeString);
-                var mess = JsonConvert.DeserializeObject<Message>(res);
-
-                AcceptResult = mess.MessageText;
-                OnPropertyChanged(nameof(AcceptResult));
-
-                IsVisibleAcceptButton = false;
-                OnPropertyChanged(nameof(IsVisibleAcceptButton));
-
-                await GetTicketInfoByCode(ScanCodeString);
-            }
-            catch (Exception e)
-            {
-                AcceptResult = "Ошибка функции AcceptTicket " + e;
-                OnPropertyChanged(nameof(AcceptResult));
-            }
+                BindingContext = viewModel,
+            };
+            await Navigation.PushAsync(page);
         }
-    }
-
-    public interface IQrScanningService
-    {
-        Task<string> ScanAsync();
     }
 }

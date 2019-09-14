@@ -16,7 +16,7 @@
         </Picker>
 
         <StackLayout Orientation="Vertical" IsVisible="{Binding IsSearchCodeAvailable}">
-            <Entry Text="{Binding CodeString}" Placeholder="Введите код:">
+            <Entry Text="{Binding CodeString}" Placeholder="Введите код: d0470caf-fc2e-43f2-8241-1a8f28130561" >
                 <Entry.Behaviors>
                     <model:EventToCommandBehavior EventName="TextChanged" Command="{Binding EventItemSelectedCommand}"/>
                 </Entry.Behaviors>
@@ -38,7 +38,7 @@
                                     <Label Text="{Binding Surname, StringFormat='Фамилия: {0}'}"/>
                                     <Label Text="{Binding Phone, StringFormat='Телефон: {0}'}"/>
                                     <Label Text="{Binding Acceptor, StringFormat='Принял: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
-                                    <Label Text="{Binding EnterTime, StringFormat='Время: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
+                                    <Label Text="{Binding EnterTime, StringFormat='Время входа: {0}'}" HorizontalOptions="StartAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Start"/>
                                 </StackLayout>
                             </Frame>
                         </ViewCell>

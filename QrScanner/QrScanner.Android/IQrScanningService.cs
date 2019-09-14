@@ -1,5 +1,6 @@
 ﻿using QrScanner.ViewModels;
 using System.Threading.Tasks;
+using QrScanner.Model;
 using ZXing.Mobile;
 
 [assembly: Xamarin.Forms.Dependency(typeof(QrScanner.Droid.QrScanningService))]

@@ -14,11 +14,13 @@ namespace QrScanner.ViewModels
             AcceptTicketCommand = new Command(AcceptTicket);
         }
 
-        public TicketCheck Ticket { get; set; }
+        public TicketViewModel Ticket { get; set; }
         public Command AcceptTicketCommand { get; set; }
         public string AcceptResult { get; set; }
         private async void AcceptTicket()
         {
+            AcceptResult = "";
+            OnPropertyChanged(nameof(AcceptResult));
             try
             {
                 var res = await Requests.GetInstance().AcceptTicket(Ticket.Uuid);
@@ -33,5 +35,19 @@ namespace QrScanner.ViewModels
                 OnPropertyChanged(nameof(AcceptResult));
             }
         }
+    }
+
+
+    public class TicketViewModel : BaseViewModel
+    {
+        public string Uuid { get; set; }
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Phone { get; set; }
+        public string EnterTime { get; set; }
+        public string Acceptor { get; set; }
+        public int Dance { get; set; }
+        public string PayStatus { get; set; }
+        public List<TicketPlace> Tables { get; set; }
     }
 }

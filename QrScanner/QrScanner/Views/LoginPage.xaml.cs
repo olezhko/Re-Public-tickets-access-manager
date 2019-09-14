@@ -19,8 +19,10 @@ namespace QrScanner.Views
 		}
 
 	    private async void Login_Clicked(object sender, EventArgs e)
-	    {
-	        ResultErrorLabel.Text = "";
+        {
+            LoginActivityIndicator.IsRunning = true;
+            LoginActivityIndicator.IsVisible = true;
+            ResultErrorLabel.Text = "";
 
             string name = NameEntry.Text;
 	        string pass = PassEntry.Text;
@@ -28,13 +30,15 @@ namespace QrScanner.Views
 	        try
 	        {
 	            var res = await Requests.GetInstance().CheckLoginPass(name, pass);
-	            if (res)
+                if (res)
 	            {
-	                Settings.Name = name;
+                    Settings.Name = name;
 	                Settings.Password = pass;
 	                Settings.IsLogin = true;
 	                Application.Current.MainPage = new MainPage();
-	            }
+                    LoginActivityIndicator.IsRunning = false;
+                    LoginActivityIndicator.IsVisible = false;
+                }
 	            else
 	            {
 	                ResultErrorLabel.Text = "Ошибка авторизации";
@@ -42,7 +46,9 @@ namespace QrScanner.Views
             }
 	        catch (Exception exception)
 	        {
-	            ResultErrorLabel.Text = "Ошибка авторизации. Проверьте подключение к интернету.";
+                LoginActivityIndicator.IsRunning = false;
+                LoginActivityIndicator.IsVisible = false;
+                ResultErrorLabel.Text = "Ошибка авторизации. Проверьте подключение к интернету.";
             }
 	    }
 	}
